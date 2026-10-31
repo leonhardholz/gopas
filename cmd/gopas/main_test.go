@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -65,6 +66,22 @@ func TestEmit(t *testing.T) {
 	}
 	if !strings.Contains(string(b), "package main") {
 		t.Fatalf("wrote:\n%s", b)
+	}
+}
+
+func TestBuildHello(t *testing.T) {
+	dir := t.TempDir()
+	bin := filepath.Join(dir, "hello")
+	hello := filepath.Join("..", "..", "testdata", "ok", "hello.pas")
+	if err := run([]string{"-b", bin, hello}, stdio{}); err != nil {
+		t.Fatal(err)
+	}
+	out, err := exec.Command(bin).CombinedOutput()
+	if err != nil {
+		t.Fatalf("run: %v\n%s", err, out)
+	}
+	if string(out) != "Hello\n" {
+		t.Fatalf("output %q", out)
 	}
 }
 

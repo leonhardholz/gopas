@@ -16,9 +16,11 @@ go build -o gopas ./cmd/gopas
 
 ```
 gopas file.pas
+gopas -o main.go file.pas
+gopas -b hello file.pas
 ```
 
-This translates the program and runs it. `-o` writes the Go source instead of running it. `-o -` writes that source to standard output.
+The first form translates the program and runs it. `-o` writes the Go source instead, and `-o -` writes that source to standard output. `-b` writes an executable to the given path and does not run it. `-o` and `-b` cannot be used together.
 
 The defaults are short-circuit `and` and `or`, no overflow check, no range check, and `dispose` of a pointer variable.
 

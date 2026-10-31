@@ -44,12 +44,14 @@ func run(args []string, io stdio) error {
 	fs.SetOutput(io.errOut)
 	var (
 		outPath     string
+		binPath     string
 		complete    bool
 		overflow    bool
 		rangeCheck  bool
 		disposeExpr bool
 	)
 	fs.StringVar(&outPath, "o", "", "write the Go source to this path instead of running the program; use - for stdout")
+	fs.StringVar(&binPath, "b", "", "write an executable to this path instead of running the program")
 	fs.BoolVar(&complete, "complete", false, "evaluate both operands of and and or")
 	fs.BoolVar(&overflow, "overflow", false, "stop the program when integer arithmetic overflows")
 	fs.BoolVar(&rangeCheck, "range", false, "stop when a value is outside its range, or a case has no matching label")
@@ -77,8 +79,14 @@ func run(args []string, io stdio) error {
 	if err != nil {
 		return err
 	}
+	if outPath != "" && binPath != "" {
+		return errors.New("-o and -b cannot be used together")
+	}
 	if outPath != "" {
 		return emit(src, outPath, io.out)
+	}
+	if binPath != "" {
+		return build(src, binPath)
 	}
 	return execute(src, io)
 }
@@ -239,22 +247,11 @@ func emit(src, path string, stdout io.Writer) error {
 }
 
 func execute(src string, io stdio) error {
-	ver, err := goVersion()
-	if err != nil {
-		return err
-	}
-	dir, err := os.MkdirTemp("", "gopas")
+	dir, err := writeModule(src)
 	if err != nil {
 		return err
 	}
 	defer os.RemoveAll(dir)
-	mod := "module example\n\ngo " + ver + "\n"
-	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte(mod), 0o644); err != nil {
-		return err
-	}
-	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte(src), 0o644); err != nil {
-		return err
-	}
 	cmd := exec.Command("go", "run", ".")
 	cmd.Dir = dir
 	cmd.Stdin = io.in
@@ -266,6 +263,52 @@ func execute(src string, io stdio) error {
 		return exitStatus{code: exit.ExitCode()}
 	}
 	return err
+}
+
+// build writes an executable at path. The path is made absolute first, so the
+// go command does not place it inside the temporary module.
+func build(src, path string) error {
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return err
+	}
+	dir, err := writeModule(src)
+	if err != nil {
+		return err
+	}
+	defer os.RemoveAll(dir)
+	cmd := exec.Command("go", "build", "-o", abs, ".")
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		msg := strings.TrimSpace(string(out))
+		if msg == "" {
+			return err
+		}
+		return errors.New(msg)
+	}
+	return nil
+}
+
+func writeModule(src string) (string, error) {
+	ver, err := goVersion()
+	if err != nil {
+		return "", err
+	}
+	dir, err := os.MkdirTemp("", "gopas")
+	if err != nil {
+		return "", err
+	}
+	mod := "module example\n\ngo " + ver + "\n"
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte(mod), 0o644); err != nil {
+		os.RemoveAll(dir)
+		return "", err
+	}
+	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte(src), 0o644); err != nil {
+		os.RemoveAll(dir)
+		return "", err
+	}
+	return dir, nil
 }
 
 // goVersion is the language version of the go command that will build the program.
