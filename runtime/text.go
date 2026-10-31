@@ -416,6 +416,7 @@ func pad(s string, width int, exact bool) string {
 }
 
 // ReadChar returns the current character and advances.
+// The buffer variable then holds the next character, as get does.
 // At the end of a line the character is a space, not the line marker.
 func (t *Text) ReadChar() byte {
 	t.prepare()
@@ -424,6 +425,7 @@ func (t *Text) ReadChar() byte {
 	}
 	c := t.Buf
 	t.advance()
+	t.prepare()
 	return c
 }
 

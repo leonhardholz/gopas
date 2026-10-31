@@ -106,6 +106,24 @@ func TestLineFlush(t *testing.T) {
 	}
 }
 
+func TestReadCharBuffer(t *testing.T) {
+	defer Cleanup()
+	f := textFrom("4.0")
+	if c := f.ReadChar(); c != '4' || f.Buf != '.' {
+		t.Fatalf("after 4: char %q buffer %q", c, f.Buf)
+	}
+	if c := f.ReadChar(); c != '.' || f.Buf != '0' {
+		t.Fatalf("after dot: char %q buffer %q", c, f.Buf)
+	}
+	lines := textFrom("a\nb")
+	if c := lines.ReadChar(); c != 'a' || lines.Buf != ' ' || !lines.Eoln() {
+		t.Fatalf("after a: char %q buffer %q eoln %v", c, lines.Buf, lines.Eoln())
+	}
+	if c := lines.ReadChar(); c != ' ' || lines.Buf != 'b' || lines.Eoln() {
+		t.Fatalf("after end of line: char %q buffer %q eoln %v", c, lines.Buf, lines.Eoln())
+	}
+}
+
 func TestReadChunk(t *testing.T) {
 	defer Cleanup()
 	f := textFrom("A")
