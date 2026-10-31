@@ -406,6 +406,103 @@ end.
 	}
 }
 
+func TestLoopRestartsAfterGoto(t *testing.T) {
+	// A goto to a label in a loop body must not decide where the next
+	// pass starts. The P5 compiler does this in new and dispose:
+	// while sy = comma, with goto 1 at the end of the body.
+	// n counts the statement the goto skips. k counts arrivals at the label.
+	cases := []struct {
+		src, want string
+	}{
+		{`program p(output);
+label 1;
+var i, n, k: integer;
+begin
+  i := 0;
+  while i < 2 do
+    begin
+      i := i+1;
+      goto 1;
+      n := n+1;
+      1: k := k+1
+    end;
+  writeln(i:1);
+  writeln(n:1);
+  writeln(k:1)
+end.
+`, "2\n0\n2\n"},
+		{`program p(output);
+label 1;
+var i, n, k: integer;
+begin
+  i := 0;
+  repeat
+    i := i+1;
+    goto 1;
+    n := n+1;
+    1: k := k+1
+  until i = 2;
+  writeln(i:1);
+  writeln(n:1);
+  writeln(k:1)
+end.
+`, "2\n0\n2\n"},
+		{`program p(output);
+label 1;
+var i, n, k: integer;
+begin
+  for i := 1 to 2 do
+    begin
+      n := n+1;
+      goto 1;
+      n := n+10;
+      1: k := k+1
+    end;
+  writeln(n:1);
+  writeln(k:1)
+end.
+`, "2\n2\n"},
+	}
+	for _, tc := range cases {
+		if got := runLimited(t, tc.src); got != tc.want {
+			t.Fatalf("got %q want %q\n%s", got, tc.want, tc.src)
+		}
+	}
+}
+
+func runLimited(t *testing.T, src string) string {
+	t.Helper()
+	prog := parseSource(t, src)
+	out, errs := Generate(prog, nil)
+	if len(errs) > 0 {
+		t.Fatal(errs)
+	}
+	dir := t.TempDir()
+	mod := "module example\n\ngo 1.18\n"
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte(mod), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte(out), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	build := exec.Command("go", "build", "-o", filepath.Join(dir, "p"), ".")
+	build.Dir = dir
+	if bout, err := build.CombinedOutput(); err != nil {
+		t.Fatalf("build: %v\n%s\n%s", err, bout, out)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, filepath.Join(dir, "p"))
+	got, err := cmd.CombinedOutput()
+	if ctx.Err() == context.DeadlineExceeded {
+		t.Fatalf("program did not finish\n%s", out)
+	}
+	if err != nil {
+		t.Fatalf("run: %v\n%s\n%s", err, got, out)
+	}
+	return string(got)
+}
+
 func runGenerated(t *testing.T, src string) string {
 	t.Helper()
 	prog := parseSource(t, src)

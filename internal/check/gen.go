@@ -1497,6 +1497,10 @@ func (g *gen) statements(body []ast.Stmt, labels []string) {
 	prevLoop, prevPC := g.loop, g.pc
 	g.loop, g.pc = loop, id
 	g.active = append(g.active, f)
+	// The counter stays on the last label reached. A loop, or any other
+	// path that enters this list again, has to start at the first segment.
+	// A goto continues at the loop label below and does not pass this reset.
+	g.line("%s = %d", id, f.first)
 	g.line("%s:", loop)
 	g.line("for {")
 	g.ind++
