@@ -47,8 +47,8 @@ These figures are from one run of about a second on an AMD Ryzen 7 5700U. Anothe
 
 | Program | gopas | Free Pascal |
 | --- | --- | --- |
-| Whetstone | 2326 MWIPS (1.07 s) | 1657 MWIPS (1.51 s) |
-| Dhrystone | 14.7 million/s (1.02 s) | 5.04 million/s (2.97 s) |
+| Whetstone | 2080 MWIPS (1.01 s) | 1736 MWIPS (1.21 s) |
+| Dhrystone | 15.5 million/s (1.06 s) | 5.56 million/s (2.97 s) |
 
 `go test -count=1 -v -run 'TestWhetstone|TestDhrystone' ./cmd/gopas` repeats the gopas measurement.
 

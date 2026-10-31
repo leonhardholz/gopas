@@ -20,9 +20,9 @@ import (
 // that figure divided by 1000.
 
 const (
-	dhrystoneRuns  = 15000000
+	dhrystoneRuns  = 16500000
 	whetstoneInner = 100
-	whetstoneOuter = 250
+	whetstoneOuter = 210
 )
 
 func TestWhetstone(t *testing.T) {

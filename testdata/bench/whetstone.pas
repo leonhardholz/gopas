@@ -7,7 +7,7 @@ label
   10, 20, 30, 40, 50, 60, 70, 80, 100;
 const
   inner = 100;
-  outer = 250; { one execution lasts about a second }
+  outer = 210; { one execution lasts about a second }
 type
   vector = array [1..4] of real;
 var
