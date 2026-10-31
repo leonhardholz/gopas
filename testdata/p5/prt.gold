@@ -1,0 +1,435 @@
+# kind, file, line, column, P5 code, P5 message, our code, our message, our line, our column
+# line and column are the character under P5's caret.
+# our line and our column are present when gopas's caret is the one a reader should see,
+# and it is not on P5's token. The test then checks that caret, code, and message.
+# skip: an ISO 7185 error that gopas leaves unreported. The program is not run.
+# range: run with range checks. The program must stop.
+# overflow: run with overflow checks. The program must stop.
+# complete: evaluate both operands of and and or. The program must stop.
+compile	iso7185prt0001.pas	9	5	14	';' expected	6	expected '(' or ';'
+compile	iso7185prt0002.pas	7	14	3	'program' expected	6	expected 'program'
+compile	iso7185prt0003.pas	7	8	2	Identifier expected	6	expected letter
+compile	iso7185prt0006.pas	11	0	6	Illegal symbol	6	expected '.'
+compile	iso7185prt0007.pas	7	24	18	Error in declaration part	6	expected 'begin', 'const', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0008.pas	7	24	2	Identifier expected	6	expected letter
+compile	iso7185prt0009.pas	7	24	2	Identifier expected	6	expected letter
+compile	iso7185prt0010.pas	7	23	14	';' expected	6	expected '(', ';' or letter or digit
+compile	iso7185prt0011.pas	7	31	2	Identifier expected	6	expected letter
+compile	iso7185prt0012.pas	7	24	18	Error in declaration part	6	expected 'begin', 'const', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0013.pas	9	6	15	Integer expected	6	expected digit
+compile	iso7185prt0014.pas	11	5	14	';' expected	6	expected '' or ';'
+compile	iso7185prt0015.pas	9	9	15	Integer expected	6	expected digit
+compile	iso7185prt0016.pas	9	9	15	Integer expected	6	expected digit
+compile	iso7185prt0017.pas	9	7	15	Integer expected	6	expected digit
+compile	iso7185prt0018.pas	9	6	2	Identifier expected	6	expected letter
+compile	iso7185prt0019.pas	9	10	16	'=' expected	6	expected '=' or letter or digit
+compile	iso7185prt0020.pas	9	11	16	'=' expected	6	expected '='
+compile	iso7185prt0021.pas	10	10	16	'=' expected	6	expected '=' or letter or digit
+compile	iso7185prt0022.pas	9	7	2	Identifier expected	6	expected letter
+compile	iso7185prt0023.pas	10	9	6	Illegal symbol	6	expected ';'
+compile	iso7185prt0024.pas	11	5	18	Error in declaration part	0	
+compile	iso7185prt0025.pas	9	6	2	Identifier expected	6	expected letter
+compile	iso7185prt0026.pas	9	14	16	'=' expected	6	expected '=' or letter or digit
+compile	iso7185prt0027.pas	9	18	16	'=' expected	6	expected '='
+compile	iso7185prt0028.pas	9	7	2	Identifier expected	6	expected letter
+compile	iso7185prt0029.pas	10	11	16	'=' expected	6	expected '=' or letter or digit
+compile	iso7185prt0030.pas	10	10	6	Illegal symbol	6	expected '..' or ';'
+compile	iso7185prt0031.pas	11	5	18	Error in declaration part	0	
+compile	iso7185prt0032.pas	9	5	2	Identifier expected	6	expected letter
+compile	iso7185prt0033.pas	9	11	6	Illegal symbol	6	expected '', ':' or letter or digit
+compile	iso7185prt0034.pas	9	5	2	Identifier expected	6	expected letter
+compile	iso7185prt0035.pas	9	10	2	Identifier expected	6	expected letter
+compile	iso7185prt0036.pas	9	15	6	Illegal symbol	6	expected '' or ':'
+compile	iso7185prt0037.pas	9	5	2	Identifier expected	6	expected letter
+compile	iso7185prt0038.pas	10	9	6	Illegal symbol	6	expected '', ':' or letter or digit
+compile	iso7185prt0039.pas	10	8	6	Illegal symbol	6	expected '..' or ';'
+compile	iso7185prt0040.pas	11	4	18	Error in declaration part	0	
+compile	iso7185prt0041.pas	9	1	18	Error in declaration part	6	expected 'begin', 'const', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0042.pas	9	11	2	Identifier expected	6	expected letter
+compile	iso7185prt0043.pas	9	17	7	Error in parameter list	6	expected '(' or ';'
+compile	iso7185prt0044.pas	9	13	18	Error in declaration part	6	expected 'begin', 'const', 'forward', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0045.pas	9	14	18	Error in declaration part	6	expected 'begin', 'const', 'forward', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0046.pas	11	5	6	Illegal symbol	6	expected ';'
+compile	iso7185prt0047.pas	9	20	18	Error in declaration part	6	expected 'begin', 'const', 'forward', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0048.pas	9	17	18	Error in declaration part	6	expected 'begin', 'const', 'forward', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0049.pas	9	9	18	Error in declaration part	6	expected 'begin', 'const', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0050.pas	9	8	18	Error in declaration part	6	expected 'begin', 'const', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0051.pas	9	4	18	Error in declaration part	6	expected 'begin', 'const', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0052.pas	9	18	7	Error in parameter list	6	expected '(', ':' or ';'
+compile	iso7185prt0053.pas	9	13	2	Identifier expected	6	expected letter
+compile	iso7185prt0054.pas	11	3	6	Illegal symbol	6	expected 'begin', 'function' or 'procedure'
+compile	iso7185prt0055.pas	11	3	6	Illegal symbol	6	expected 'begin', 'function' or 'procedure'
+compile	iso7185prt0056.pas	9	3	18	Error in declaration part	6	expected 'begin', 'const', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0057.pas	10	1	6	Illegal symbol	6	expected ';', 'begin', 'case', 'else', 'end', 'for', 'goto', 'if', 'read', 'readln', 'repeat', 'until', 'while', 'with', 'write', 'writeln', digit or letter
+compile	iso7185prt0100.pas	11	4	6	Illegal symbol	6	expected ';', 'begin', 'case', 'else', 'end', 'for', 'goto', 'if', 'read', 'readln', 'repeat', 'until', 'while', 'with', 'write', 'writeln', digit or letter
+compile	iso7185prt0101.pas	15	7	5	':' expected	6	expected ':'
+compile	iso7185prt0102.pas	11	5	6	Illegal symbol	0	
+compile	iso7185prt0103.pas	13	6	59	Error in variable	6	expected '(', '(.', '.', ':=', ';', '@', '[', '^', 'end' or '↑'
+compile	iso7185prt0104.pas	21	4	6	Illegal symbol	6	expected ';', 'begin', 'case', 'else', 'end', 'for', 'goto', 'if', 'read', 'readln', 'repeat', 'until', 'while', 'with', 'write', 'writeln', digit or letter
+compile	iso7185prt0105.pas	17	3	6	Illegal symbol	6	expected '.'
+compile	iso7185prt0106.pas	11	8	104	Identifier not declared	104	identifier 'beign' not declared
+compile	iso7185prt0107.pas	15	4	6	Illegal symbol	6	expected ';' or 'end'
+compile	iso7185prt0108.pas	15	6	104	Identifier not declared	104	identifier 'edn' not declared
+compile	iso7185prt0109.pas	11	4	167	Undeclared label	0	
+compile	iso7185prt0110.pas	11	5	104	Identifier not declared	104	identifier 'fi' not declared
+compile	iso7185prt0111.pas	13	10	58	Error in factor	0	
+compile	iso7185prt0112.pas	13	11	6	Illegal symbol	6	expected '*', '+', '-', '/', 'and', 'div', 'mod', 'or' or 'then'
+compile	iso7185prt0113.pas	13	14	6	Illegal symbol	6	expected '*', '+', '-', '/', 'and', 'div', 'mod', 'or' or 'then'
+compile	iso7185prt0114.pas	13	26	59	Error in variable	6	expected '(', '(.', '*', '+', '-', '.', '/', ';', '<', '<=', '<>', '=', '>', '>=', '@', '[', '^', 'and', 'div', 'else', 'end', 'in', 'mod', 'or' or '↑'
+compile	iso7185prt0115.pas	13	7	59	Error in variable	6	expected '(', '(.', '.', ':=', ';', '@', '[', '^', 'end' or '↑'
+compile	iso7185prt0116.pas	13	7	104	Identifier not declared	104	identifier 'csae' not declared
+compile	iso7185prt0117.pas	13	10	58	Error in factor	0	
+compile	iso7185prt0118.pas	15	7	59	Error in variable	6	expected '(', '(.', '*', '+', '-', '.', '/', '<', '<=', '<>', '=', '>', '>=', '@', '[', '^', 'and', 'div', 'in', 'mod', 'of', 'or' or '↑'
+compile	iso7185prt0119.pas	13	12	59	Error in variable	6	expected '(', '(.', '*', '+', '-', '.', '/', '<', '<=', '<>', '=', '>', '>=', '@', '[', '^', 'and', 'div', 'in', 'mod', 'of', 'or' or '↑'
+compile	iso7185prt0120.pas	15	7	50	Error in constant	6	expected ''', '+', '-', digit or letter
+compile	iso7185prt0121.pas	15	9	50	Error in constant	6	expected ''', '+', '-', digit or letter
+compile	iso7185prt0122.pas	15	9	6	Illegal symbol	6	expected '' or ':'
+compile	iso7185prt0123.pas	16	7	6	Illegal symbol	6	expected '*', '+', '-', '/', ';', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'end', 'in', 'mod' or 'or'
+compile	iso7185prt0124.pas	18	4	6	Illegal symbol	6	expected ';' or 'end'
+compile	iso7185prt0125.pas	18	6	6	Illegal symbol	6	expected '*', '+', '-', '/', ';', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'end', 'in', 'mod' or 'or'
+compile	iso7185prt0126.pas	13	4	167	Undeclared label	0	
+compile	iso7185prt0127.pas	13	8	104	Identifier not declared	104	identifier 'wihle' not declared
+compile	iso7185prt0128.pas	13	11	58	Error in factor	0	
+compile	iso7185prt0129.pas	13	14	6	Illegal symbol	6	expected '*', '+', '-', '/', 'and', 'div', 'do', 'mod' or 'or'
+compile	iso7185prt0130.pas	13	15	59	Error in variable	6	expected '(', '(.', '*', '+', '-', '.', '/', ';', '<', '<=', '<>', '=', '>', '>=', '@', '[', '^', 'and', 'div', 'end', 'in', 'mod', 'or' or '↑'
+compile	iso7185prt0131.pas	13	9	104	Identifier not declared	104	identifier 'reepat' not declared
+compile	iso7185prt0132.pas	13	18	59	Error in variable	6	expected '(', '(.', '*', '+', '-', '.', '/', ';', '<', '<=', '<>', '=', '>', '>=', '@', '[', '^', 'and', 'div', 'in', 'mod', 'or', 'until' or '↑'
+compile	iso7185prt0133.pas	13	21	59	Error in variable	6	expected '(', '(.', '*', '+', '-', '.', '/', ';', '<', '<=', '<>', '=', '>', '>=', '@', '[', '^', 'and', 'div', 'in', 'mod', 'or', 'until' or '↑'
+compile	iso7185prt0134.pas	15	3	58	Error in factor	0	
+compile	iso7185prt0135.pas	13	12	6	Illegal symbol	6	expected '*', '+', '-', '/', ';', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'end', 'in', 'mod' or 'or'
+compile	iso7185prt0136.pas	13	6	104	Identifier not declared	104	identifier 'fro' not declared
+compile	iso7185prt0137.pas	13	9	2	Identifier expected	0	
+compile	iso7185prt0138.pas	13	9	104	Identifier not declared	183	control variable 'id' is not local	13	4
+compile	iso7185prt0139.pas	13	10	51	':=' expected	6	expected ':='
+compile	iso7185prt0140.pas	13	14	58	Error in factor	0	
+compile	iso7185prt0141.pas	13	16	6	Illegal symbol	6	expected '*', '+', '-', '/', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'downto', 'in', 'mod', 'or' or 'to'
+compile	iso7185prt0142.pas	13	16	6	Illegal symbol	6	expected '*', '+', '-', '/', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'downto', 'in', 'mod', 'or' or 'to'
+compile	iso7185prt0143.pas	13	20	6	Illegal symbol	6	expected '*', '+', '-', '/', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'downto', 'in', 'mod', 'or' or 'to'
+compile	iso7185prt0144.pas	13	19	58	Error in factor	0	
+compile	iso7185prt0145.pas	13	21	6	Illegal symbol	6	expected '*', '+', '-', '/', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'do', 'in', 'mod' or 'or'
+compile	iso7185prt0146.pas	13	22	6	Illegal symbol	6	expected '*', '+', '-', '/', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'do', 'in', 'mod' or 'or'
+compile	iso7185prt0147.pas	13	7	59	Error in variable	6	expected '(', '(.', '.', ':=', ';', '@', '[', '^', 'end' or '↑'
+compile	iso7185prt0148.pas	13	7	104	Identifier not declared	104	identifier 'wtih' not declared
+compile	iso7185prt0149.pas	14	9	2	Identifier expected	6	expected letter
+compile	iso7185prt0150.pas	14	13	2	Identifier expected	0	
+compile	iso7185prt0151.pas	15	4	5	':' expected	6	expected ':'
+compile	iso7185prt0152.pas	13	7	104	Identifier not declared	104	identifier 'ogto' not declared
+compile	iso7185prt0153.pas	15	9	15	Integer expected	6	expected digit
+compile	iso7185prt0154.pas	15	7	50	Error in constant	6	expected ''', '+', '-', digit or letter
+compile	iso7185prt0155.pas	15	10	2	Identifier expected	0	
+compile	iso7185prt0156.pas	15	9	6	Illegal symbol	6	expected '' or ':'
+compile	iso7185prt0157.pas	14	11	59	Error in variable	6	expected '(.', '', '.', '@', '[', '^', 'do' or '↑'
+compile	iso7185prt0200.pas	9	15	19	Error in field-list	6	expected 'case', 'end' or letter
+compile	iso7185prt0201.pas	9	15	19	Error in field-list	6	expected 'case', 'end' or letter
+compile	iso7185prt0202.pas	9	17	2	Identifier expected	6	expected letter
+compile	iso7185prt0203.pas	9	23	6	Illegal symbol	6	expected '' or ':'
+compile	iso7185prt0204.pas	9	20	10	Error in type	0	
+compile	iso7185prt0205.pas	10	5	6	Illegal symbol	6	expected ';'
+compile	iso7185prt0206.pas	10	20	6	Illegal symbol	6	expected '' or ':'
+compile	iso7185prt0207.pas	10	20	2	Identifier expected	6	expected letter
+compile	iso7185prt0208.pas	10	24	2	Identifier expected	0	
+compile	iso7185prt0209.pas	10	21	2	Identifier expected	0	
+compile	iso7185prt0210.pas	11	21	8	'of' expected	6	expected 'of'
+compile	iso7185prt0211.pas	10	32	8	'of' expected	6	expected 'of'
+compile	iso7185prt0212.pas	11	18	50	Error in constant	6	expected ''', '+', '-', digit or letter
+compile	iso7185prt0213.pas	13	18	50	Error in constant	6	expected ''', '+', '-', digit or letter
+compile	iso7185prt0214.pas	13	22	50	Error in constant	6	expected ''', '+', '-', digit or letter
+compile	iso7185prt0215.pas	13	27	5	':' expected	6	expected '' or ':'
+compile	iso7185prt0216.pas	13	28	9	'(' expected	6	expected '('
+compile	iso7185prt0217.pas	13	29	4	')' expected	6	expected ')', 'case' or letter
+compile	iso7185prt0218.pas	14	22	6	Illegal symbol	6	expected ';' or 'end'
+compile	iso7185prt0219.pas	15	18	13	'end' expected	6	expected 'end'
+compile	iso7185prt0220.pas	15	18	104	Identifier not declared	6	expected 'end'
+compile	iso7185prt0221.pas	9	17	6	Illegal symbol	6	expected '' or ':'
+compile	iso7185prt0222.pas	13	24	6	Illegal symbol	6	expected '' or ':'
+compile	iso7185prt0300.pas	9	1	18	Error in declaration part	6	expected 'begin', 'const', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0301.pas	9	9	18	Error in declaration part	6	expected 'begin', 'const', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0302.pas	9	11	2	Identifier expected	6	expected letter
+compile	iso7185prt0303.pas	9	1	18	Error in declaration part	6	expected 'begin', 'const', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0304.pas	9	8	18	Error in declaration part	6	expected 'begin', 'const', 'function', 'label', 'procedure', 'type' or 'var'
+compile	iso7185prt0305.pas	9	10	2	Identifier expected	6	expected letter
+compile	iso7185prt0306.pas	9	31	2	Identifier expected	6	expected letter
+compile	iso7185prt0400.pas	9	10	104	Identifier not declared	0	
+compile	iso7185prt0401.pas	9	9	2	Identifier expected	6	expected letter
+compile	iso7185prt0402.pas	9	9	2	Identifier expected	6	expected letter
+compile	iso7185prt0403.pas	9	14	2	Identifier expected	6	expected letter
+compile	iso7185prt0404.pas	9	24	4	')' expected	6	expected ')', '' or letter or digit
+compile	iso7185prt0405.pas	9	9	10	Error in type	0	
+compile	iso7185prt0406.pas	9	10	6	Illegal symbol	6	expected '..'
+compile	iso7185prt0407.pas	9	11	50	Error in constant	6	expected ''', '+', '-', digit or letter
+compile	iso7185prt0408.pas	9	15	6	Illegal symbol	6	expected ')' or ''
+compile	iso7185prt0500.pas	9	9	2	Identifier expected	6	expected letter
+compile	iso7185prt0501.pas	9	13	104	Identifier not declared	104	identifier 'picked' not declared
+compile	iso7185prt0502.pas	9	8	10	Error in type	6	expected ''', '(', '+', '-', '@', '^', 'array', 'file', 'packed', 'record', 'set', '↑', digit or letter
+compile	iso7185prt0503.pas	9	14	11	'[' expected	6	expected '(.' or '['
+compile	iso7185prt0504.pas	9	15	1	Error in simple type	6	expected ''', '(', '+', '-', digit or letter
+compile	iso7185prt0505.pas	9	16	1	Error in simple type	0	
+compile	iso7185prt0506.pas	9	18	50	Error in constant	6	expected ''', '+', '-', digit or letter
+compile	iso7185prt0507.pas	9	22	12	']' expected	6	expected '', '.)' or ']'
+compile	iso7185prt0508.pas	9	15	11	'[' expected	6	expected '(.' or '['
+compile	iso7185prt0509.pas	9	28	8	'of' expected	6	expected 'of'
+compile	iso7185prt0510.pas	9	23	8	'of' expected	6	expected 'of'
+compile	iso7185prt0511.pas	9	24	10	Error in type	6	expected ''', '(', '+', '-', '@', '^', 'array', 'file', 'packed', 'record', 'set', '↑', digit or letter
+compile	iso7185prt0512.pas	9	9	10	Error in type	0	
+compile	iso7185prt0513.pas	9	12	104	Identifier not declared	104	identifier 'filed' not declared
+compile	iso7185prt0514.pas	9	19	8	'of' expected	6	expected 'of'
+compile	iso7185prt0515.pas	9	15	10	Error in type	6	expected ''', '(', '+', '-', '@', '^', 'array', 'file', 'packed', 'record', 'set', '↑', digit or letter
+compile	iso7185prt0516.pas	9	10	104	Identifier not declared	104	identifier 'ste' not declared
+compile	iso7185prt0517.pas	9	15	8	'of' expected	6	expected 'of'
+compile	iso7185prt0518.pas	9	14	1	Error in simple type	6	expected ''', '(', '+', '-', digit or letter
+compile	iso7185prt0519.pas	9	8	103	Identifier is not of appropriate class	0	
+compile	iso7185prt0520.pas	9	13	104	Identifier not declared	104	identifier 'recard' not declared
+compile	iso7185prt0521.pas	11	5	13	'end' expected	6	expected 'case' or 'end'
+compile	iso7185prt0522.pas	9	31	6	Illegal symbol	6	expected '..', ';' or 'end'
+compile	iso7185prt0600.pas	9	13	7	Error in parameter list	6	expected 'function', 'procedure', 'var' or letter
+compile	iso7185prt0601.pas	9	13	7	Error in parameter list	6	expected 'function', 'procedure', 'var' or letter
+compile	iso7185prt0602.pas	9	15	2	Identifier expected	6	expected letter
+compile	iso7185prt0603.pas	9	15	7	Error in parameter list	6	expected '' or ':'
+compile	iso7185prt0604.pas	9	24	7	Error in parameter list	6	expected '' or ':'
+compile	iso7185prt0605.pas	9	18	2	Identifier expected	6	expected 'array', 'packed' or letter
+compile	iso7185prt0606.pas	11	17	2	Identifier expected	6	expected letter
+compile	iso7185prt0607.pas	11	17	7	Error in parameter list	6	expected '' or ':'
+compile	iso7185prt0608.pas	9	27	7	Error in parameter list	6	expected ')' or ';'
+compile	iso7185prt0700.pas	13	11	6	Illegal symbol	6	expected '*', '+', '-', '/', ';', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'end', 'in', 'mod' or 'or'
+compile	iso7185prt0701.pas	13	9	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0702.pas	15	3	58	Error in factor	0	
+compile	iso7185prt0703.pas	13	9	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0704.pas	15	3	58	Error in factor	0	
+compile	iso7185prt0705.pas	13	9	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0706.pas	15	3	58	Error in factor	0	
+compile	iso7185prt0707.pas	13	10	58	Error in factor	0	
+compile	iso7185prt0708.pas	15	3	58	Error in factor	0	
+compile	iso7185prt0709.pas	13	10	58	Error in factor	0	
+compile	iso7185prt0710.pas	15	3	58	Error in factor	0	
+compile	iso7185prt0711.pas	13	10	58	Error in factor	0	
+compile	iso7185prt0712.pas	15	3	58	Error in factor	0	
+compile	iso7185prt0713.pas	15	3	58	Error in factor	0	
+compile	iso7185prt0714.pas	13	12	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0715.pas	13	12	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0716.pas	13	12	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0717.pas	13	10	58	Error in factor	0	
+compile	iso7185prt0800.pas	20	9	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0801.pas	20	9	126	Number of parameters does not agree with declaration	6	expected '(', '(.', '.', ':=', ';', '@', '[', '^', 'end' or '↑'
+compile	iso7185prt0802.pas	20	11	6	Illegal symbol	6	expected ')', '*', '+', '', '-', '/', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'in', 'mod' or 'or'
+compile	iso7185prt0803.pas	20	9	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0804.pas	20	12	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0805.pas	22	3	4	')' expected	6	expected ')', '*', '+', '', '-', '/', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'in', 'mod' or 'or'
+compile	iso7185prt0900.pas	12	10	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0901.pas	12	11	116	Error in type of standard procedure parameter	6	expected '(', '(.', '.', ':=', ';', '@', '[', '^', 'end' or '↑'
+compile	iso7185prt0902.pas	12	14	6	Illegal symbol	6	expected ')', '*', '+', '', '-', '/', ':', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'in', 'mod' or 'or'
+compile	iso7185prt0903.pas	12	10	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0904.pas	12	14	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0905.pas	12	14	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0906.pas	12	17	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0907.pas	12	15	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt0908.pas	14	3	4	')' expected	6	expected ')', '*', '+', '', '-', '/', ':', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'in', 'mod' or 'or'
+compile	iso7185prt1000.pas	13	10	59	Error in variable	6	expected '(', '(.', '*', '+', '-', '.', '/', ';', '<', '<=', '<>', '=', '>', '>=', '@', '[', '^', 'and', 'div', 'end', 'in', 'mod', 'or', '↑' or letter or digit
+compile	iso7185prt1001.pas	13	11	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt1002.pas	13	11	104	Identifier not declared	104	identifier 'nat' not declared
+compile	iso7185prt1003.pas	15	3	58	Error in factor	0	
+compile	iso7185prt1004.pas	13	16	6	Illegal symbol	6	expected digit
+compile	iso7185prt1006.pas	13	16	58	Error in factor	0	
+compile	iso7185prt1007.pas	13	18	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt1008.pas	13	18	6	Illegal symbol	6	expected '*', '+', '', '-', '.)', '..', '/', '<', '<=', '<>', '=', '>', '>=', ']', 'and', 'div', 'in', 'mod' or 'or'
+compile	iso7185prt1009.pas	13	16	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '.)', '[', ']', 'nil', 'not', digit or letter
+compile	iso7185prt1010.pas	13	18	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt1100.pas	13	9	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt1101.pas	15	3	58	Error in factor	0	
+compile	iso7185prt1102.pas	14	9	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt1103.pas	16	3	58	Error in factor	0	
+compile	iso7185prt1104.pas	13	11	58	Error in factor	0	
+compile	iso7185prt1105.pas	15	3	58	Error in factor	0	
+compile	iso7185prt1106.pas	13	11	58	Error in factor	0	
+compile	iso7185prt1107.pas	15	3	58	Error in factor	0	
+compile	iso7185prt1108.pas	13	11	58	Error in factor	0	
+compile	iso7185prt1109.pas	15	3	58	Error in factor	0	
+compile	iso7185prt1200.pas	15	3	58	Error in factor	0	
+compile	iso7185prt1201.pas	15	3	58	Error in factor	0	
+compile	iso7185prt1203.pas	15	3	58	Error in factor	0	
+compile	iso7185prt1205.pas	15	3	58	Error in factor	0	
+compile	iso7185prt1206.pas	13	10	58	Error in factor	0	
+compile	iso7185prt1207.pas	15	3	58	Error in factor	0	
+compile	iso7185prt1300.pas	13	11	104	Identifier not declared	104	identifier 'nul' not declared
+compile	iso7185prt1400.pas	14	9	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt1401.pas	14	11	59	Error in variable	6	expected '(', '(.', '*', '+', '-', '.', '/', ';', '<', '<=', '<>', '=', '>', '>=', '@', '[', '^', 'and', 'div', 'end', 'in', 'mod', 'or' or '↑'
+compile	iso7185prt1402.pas	14	12	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt1403.pas	14	12	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt1404.pas	14	14	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt1405.pas	14	13	6	Illegal symbol	6	expected '*', '+', '', '-', '.)', '/', '<', '<=', '<>', '=', '>', '>=', ']', 'and', 'div', 'in', 'mod' or 'or'
+compile	iso7185prt1406.pas	16	3	12	']' expected	6	expected '*', '+', '', '-', '.)', '/', '<', '<=', '<>', '=', '>', '>=', ']', 'and', 'div', 'in', 'mod' or 'or'
+compile	iso7185prt1407.pas	16	3	2	Identifier expected	0	
+compile	iso7185prt1500.pas	13	9	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt1501.pas	13	10	201	Error in real constant: digit expected	0	
+compile	iso7185prt1502.pas	13	9	58	Error in factor	6	expected ''', '(', '(.', '+', '-', '[', 'nil', 'not', digit or letter
+compile	iso7185prt1503.pas	13	9	241	Invalid tolken separator	466	number and word are not separated
+compile	iso7185prt1504.pas	14	11	6	Illegal symbol	6	expected '*', '+', '-', '/', ';', '<', '<=', '<>', '=', '>', '>=', 'and', 'div', 'end', 'in', 'mod' or 'or'
+compile	iso7185prt1505.pas	13	10	201	Error in real constant: digit expected	0	
+compile	iso7185prt1506.pas	13	11	201	Error in real constant: digit expected	0	
+compile	iso7185prt1507.pas	13	11	201	Error in real constant: digit expected	0	
+compile	iso7185prt1508.pas	14	9	104	Identifier not declared	104	identifier 'e' not declared
+compile	iso7185prt1600.pas	11	25	202	String constant must not exceed source line	0	
+compile	iso7185prt1620.pas	16	0	6	Illegal symbol	0	
+compile	iso7185prt1621.pas	11	4	6	Illegal symbol	6	expected ';', 'begin', 'case', 'else', 'end', 'for', 'goto', 'if', 'read', 'readln', 'repeat', 'until', 'while', 'with', 'write', 'writeln', digit or letter
+compile	iso7185prt1701.pas	18	9	139	Index type is not compatible with declaration	139	index type incompatible	18	4
+skip	iso7185prt1702A.pas	32	0	0	Variant not active	0	
+skip	iso7185prt1702b.pas	37	0	0	Change to VAR ref variant	0	
+skip	iso7185prt1702c.pas	38	0	0	Undefined location access	0	
+skip	iso7185prt1702d.pas	38	0	0	Change to VAR ref variant	0	
+runtime	iso7185prt1703.pas	19	0	0	Dereference of nil ptr	0	
+runtime	iso7185prt1704.pas	17	0	0	Undefined location access	0	
+skip	iso7185prt1705.pas	21	0	0	Dispose of VAR ref block	0	
+skip	iso7185prt1706a.pas	19	0	0	VAR ref file buf modified	0	
+skip	iso7185prt1706b.pas	27	0	0	File buffer undefined	0	
+compile	iso7185prt1707a.pas	23	9	142	Illegal parameter substitution	447	parameter type mismatch	23	4
+compile	iso7185prt1707b.pas	17	16	121	File value parameter, or parameter containing file, not allowed	121	value parameter has a file type	17	13
+range	iso7185prt1708.pas	22	0	0	Set element out of range	0	
+runtime	iso7185prt1709.pas	22	0	0	File not in write mode	0	
+runtime	iso7185prt1710.pas	16	0	0	File not in write mode	0	
+skip	iso7185prt1712.pas	17	0	0	File buffer undefined	0	
+skip	iso7185prt1713.pas	16	0	0	Cannot reset closed file	0	
+runtime	iso7185prt1714.pas	18	0	0	File not in read mode	0	
+runtime	iso7185prt1715.pas	16	0	0	File not in read mode	0	
+runtime	iso7185prt1716.pas	21	0	0	End of file	0	
+compile	iso7185prt1717.pas	20	13	129	Type conflict of operands	153	type error in read	20	4
+compile	iso7185prt1718.pas	20	3	129	Type conflict of operands	145	type conflict	18	4
+skip	iso7185prt1719.pas	28	0	0	Change to alloc tagfield	0	
+skip	iso7185prt1720.pas	23	0	0	New/dispose tags mismatch	0	
+skip	iso7185prt1721.pas	32	0	0	New/dispose tags mismatch	0	
+skip	iso7185prt1722.pas	25	0	0	New/dispose tags mismatch	0	
+skip	iso7185prt1723.pas	17	0	0	Dispose nil pointer	0	
+skip	iso7185prt1724.pas	16	0	0	Undefined location access	0	
+compile	iso7185prt1726.pas	21	15	116	Error in type of standard procedure parameter	431	'pack' index type mismatch	21	4
+skip	iso7185prt1727.pas	17	0	0	Undefined location access	0	
+compile	iso7185prt1728.pas	19	0	0	Pack elements out of bnds	467	'pack' copies past the end of the array	19	4
+compile	iso7185prt1729.pas	20	20	116	Error in type of standard procedure parameter	431	'unpack' index type mismatch	20	4
+skip	iso7185prt1730.pas	17	0	0	Undefined location access	0	
+compile	iso7185prt1731.pas	17	0	0	Unpack elem out of bnds	467	'unpack' copies past the end of the array	17	4
+overflow	iso7185prt1732.pas	17	0	0	Arithmetic overflow	0	
+runtime	iso7185prt1733.pas	19	0	0	Cannot find ln <= 0	0	
+runtime	iso7185prt1734.pas	19	0	0	Cannot find sqrt < 0	0	
+skip	iso7185prt1735.pas	23	0	0	Real argument to large	0	
+skip	iso7185prt1736.pas	23	0	0	Real argument to large	0	
+range	iso7185prt1737.pas	22	0	0	Value out of range	0	
+range	iso7185prt1738.pas	18	0	0	Arithmetic overflow	0	
+range	iso7185prt1739.pas	22	0	0	Arithmetic overflow	0	
+skip	iso7185prt1740.pas	16	0	0	File not in read mode	0	
+skip	iso7185prt1741.pas	16	0	0	File not in read mode	0	
+skip	iso7185prt1743.pas	19	0	0	Undefined location access	0	
+runtime	iso7185prt1744.pas	20	0	0	Zero divide	0	
+runtime	iso7185prt1745.pas	20	0	0	Zero divide	0	
+runtime	iso7185prt1746A.pas	27	0	0	Invalid divisor in mod	0	
+runtime	iso7185prt1746b.pas	27	0	0	Invalid divisor in mod	0	
+compile	iso7185prt1748.pas	18	5	193	Function does not assign to result	458	function 'a' does not assign its result	12	1
+compile	iso7185prt1749.pas	19	3	129	Type conflict of operands	145	type conflict	17	4
+range	iso7185prt1750.pas	19	0	0	Set element out of range	0	
+range	iso7185prt1751.pas	24	0	0	Value out of range	0	
+compile	iso7185prt1752.pas	18	18	145	Type conflict	145	type conflict	18	4
+compile	iso7185prt1753.pas	18	24	145	Type conflict	145	type conflict	18	4
+skip	iso7185prt1754.pas	21	0	0	Invalid integer format	0	
+range	iso7185prt1755.pas	21	0	0	Value read out of range	0	
+skip	iso7185prt1756.pas	21	0	0	Invalid real format	0	
+runtime	iso7185prt1757.pas	22	0	0	End of file	0	
+skip	iso7185prt1758a.pas	24	0	0	Width cannot be < 1	0	
+skip	iso7185prt1758b.pas	24	0	0	Fraction cannot be < 1	0	
+compile	iso7185prt1759.pas	13	11	261	Label beyond valid integral value (>9999)	0	
+compile	iso7185prt1760.pas	12	10	15	Integer expected	6	expected digit
+compile	iso7185prt1761.pas	17	3	129	Type conflict of operands	145	type conflict	15	4
+compile	iso7185prt1762.pas	15	22	129	Type conflict of operands	145	type conflict	15	4
+compile	iso7185prt1763.pas	15	12	129	Type conflict of operands	145	type conflict	15	4
+compile	iso7185prt1764.pas	15	21	129	Type conflict of operands	145	type conflict	15	4
+compile	iso7185prt1765.pas	17	21	129	Type conflict of operands	145	type conflict	17	4
+compile	iso7185prt1767.pas	10	36	240	Header parameter already included	0	
+runtime	iso7185prt1800.pas	21	0	0	Ptr used after dispose op	0	
+compile	iso7185prt1801.pas	20	10	195	For loop index is threatened	155	control variable 'i' is threatened	20	7
+compile	iso7185prt1802.pas	28	10	195	For loop index is threatened	155	control variable 'i' is threatened	28	7
+compile	iso7185prt1803.pas	24	16	195	For loop index is threatened	155	control variable 'i' is threatened	24	7
+compile	iso7185prt1804.pas	21	11	195	For loop index is threatened	155	control variable 'i' is threatened	21	7
+compile	iso7185prt1805.pas	26	8	195	For loop index is threatened	155	control variable 'i' is threatened	19	4
+compile	iso7185prt1806.pas	34	8	195	For loop index is threatened	155	control variable 'i' is threatened	27	4
+compile	iso7185prt1807.pas	29	8	195	For loop index is threatened	155	control variable 'i' is threatened	20	4
+compile	iso7185prt1808.pas	17	8	183	For index variable must be local to this block	183	control variable 'i' is not local	17	4
+compile	iso7185prt1809.pas	15	8	143	Illegal type of loop control variable	143	control variable must be ordinal	15	4
+compile	iso7185prt1810.pas	20	8	143	Illegal type of loop control variable	0	
+skip	iso7185prt1811.pas	22	0	0	Undefined location access	0	
+compile	iso7185prt1820.pas	30	3	129	Type conflict of operands	145	type conflict	28	5
+compile	iso7185prt1821.pas	12	5	101	Identifier declared twice	101	identifier 'i' declared twice
+compile	iso7185prt1822.pas	12	9	101	Identifier declared twice	101	identifier 'myvar' declared twice
+compile	iso7185prt1823.pas	23	7	199	Var parameter must be same type	199	variable parameter type mismatch	23	4
+compile	iso7185prt1824.pas	17	3	129	Type conflict of operands	145	type conflict	15	4
+compile	iso7185prt1825.pas	20	10	147	Label type incompatible with selecting expression	147	case label type incompatible	16	4
+compile	iso7185prt1826.pas	11	31	190	File component may not contain other files	190	file component contains a file	11	8
+compile	iso7185prt1827.pas	18	17	190	File component may not contain other files	190	file component contains a file	18	8
+runtime	iso7185prt1828.pas	20	0	0	Value out of range	0	
+compile	iso7185prt1829.pas	24	3	126	Number of parameters does not agree with declaration	126	number of parameters does not agree	22	4
+compile	iso7185prt1830.pas	22	12	126	Number of parameters does not agree with declaration	126	number of parameters does not agree	22	4
+compile	iso7185prt1831.pas	22	10	142	Illegal parameter substitution	447	parameter type mismatch	22	4
+compile	iso7185prt1832.pas	20	7	186	Label referenced by goto at lesser statement level or differently nested statement	185	goto '1' enters a structured statement	17	4
+compile	iso7185prt1833.pas	28	7	184	Interprocedure goto does not reference outter block of destination	185	goto '1' enters a structured statement	19	4
+accept	iso7185prt1834.pas	0	0	0		0	
+compile	iso7185prt1835.pas	22	4	168	Undefined label	168	label '1' labels no statement	9	7
+compile	iso7185prt1836.pas	21	4	168	Undefined label	168	label '1' labels no statement	9	7
+compile	iso7185prt1837.pas	13	9	167	Undeclared label	167	label '1' not declared	16	7
+compile	iso7185prt1838.pas	11	4	104	Identifier not declared	104	identifier 'i' not declared
+skip	iso7185prt1839.pas	16	0	0	Width cannot be < 1	0	
+skip	iso7185prt1840.pas	16	0	0	Fraction cannot be < 1	0	
+compile	iso7185prt1841.pas	11	13	205	Zero string not allowed	457	empty string not allowed
+compile	iso7185prt1842.pas	21	12	116	Error in type of standard procedure parameter	438	readln requires a textfile	21	4
+compile	iso7185prt1843.pas	28	9	198	Var parameter cannot be a tagfield	465	variable parameter is a tag field	28	4
+compile	iso7185prt1844.pas	28	9	197	Var parameter cannot be packed	464	variable parameter is a component of a packed variable	28	4
+compile	iso7185prt1845.pas	20	7	167	Undeclared label	167	label '1' not declared
+compile	iso7185prt1846.pas	11	72	203	Integer constant exceeds range	462	integer constant exceeds maxint	11	10
+compile	iso7185prt1847.pas	11	13	0	exponent out of range	463	real exponent is out of range	11	10
+compile	iso7185prt1848.pas	28	17	197	Var parameter cannot be packed	464	variable parameter is a component of a packed variable	28	14
+compile	iso7185prt1849.pas	37	13	197	Var parameter cannot be packed	464	variable parameter is a component of a packed variable	37	4
+accept	iso7185prt1850.pas	0	0	0		0	
+skip	iso7185prt1851.pas	30	0	0	Undefined location access	0	
+range	iso7185prt1852.pas	17	0	0	Value out of range	0	
+compile	iso7185prt1853.pas	12	20	243	Type referenced is incomplete	459	type 'r' is incomplete
+compile	iso7185prt1854.pas	17	20	243	Type referenced is incomplete	459	type 'r' is incomplete
+compile	iso7185prt1855.pas	21	3	129	Type conflict of operands	145	type conflict	19	4
+compile	iso7185prt1856.pas	15	15	200	Tagfield constants must cover entire tagfield type	200	variant does not cover 'enum'	12	13
+compile	iso7185prt1857.pas	17	19	244	Tagfield constant exceeds type range	200	variant does not cover 'enums'	13	13
+compile	iso7185prt1858.pas	15	15	125	Error in type of standard function parameter	412	'succ' requires an ordinal	15	9
+compile	iso7185prt1859.pas	15	15	125	Error in type of standard function parameter	412	'pred' requires an ordinal	15	9
+compile	iso7185prt1860.pas	11	11	0	Forward not completed	0	
+compile	iso7185prt1861.pas	39	6	128	Result type of parameter function does not agree with declaration	189	procedural parameter mismatch	39	4
+compile	iso7185prt1862.pas	34	6	189	Parameter lists of formal and actual parameters not congruous	189	procedural parameter mismatch	34	4
+compile	iso7185prt1863.pas	36	6	189	Parameter lists of formal and actual parameters not congruous	189	procedural parameter mismatch	36	4
+range	iso7185prt1864.pas	30	0	0	Value out of range	0	
+range	iso7185prt1865.pas	30	0	0	Value out of range	0	
+skip	iso7185prt1866.pas	34	0	0	Eof on file	0	
+compile	iso7185prt1867.pas	18	0	0	Value out of range	197	'pack' requires a packed array	18	4
+compile	iso7185prt1868.pas	18	0	0	Value out of range	197	'unpack' requires a packed array	18	4
+compile	iso7185prt1869.pas	18	0	0	Pack elements out of bnds	197	'pack' requires a packed array	18	4
+compile	iso7185prt1870.pas	18	0	0	Unpack elem out of bnds	197	'unpack' requires a packed array	18	4
+skip	iso7185prt1871.pas	39	0	0	Access tag allocated rec	0	
+skip	iso7185prt1872.pas	37	0	0	Access tag allocated rec	0	
+skip	iso7185prt1873.pas	43	0	0	Access tag allocated rec	0	
+runtime	iso7185prt1874.pas	30	0	0	Dispose of with ref block	0	
+range	iso7185prt1875.pas	21	0	0	Value read out of range	0	
+range	iso7185prt1876.pas	19	0	0	Value read out of range	0	
+range	iso7185prt1877.pas	19	0	0	Value read out of range	0	
+range	iso7185prt1878.pas	19	0	0	Value out of range	0	
+range	iso7185prt1879.pas	17	0	0	Value out of range	0	
+range	iso7185prt1880.pas	16	0	0	Value out of range	0	
+compile	iso7185prt1881.pas	11	35	245	Array size too large	461	array is too large	11	8
+compile	iso7185prt1882.pas	11	41	245	Array size too large	461	array is too large	11	8
+compile	iso7185prt1900.pas	13	41	10	Error in type	6	expected ''', '(', '+', '-', '@', '^', 'array', 'file', 'packed', 'record', 'set', '↑', digit or letter
+compile	iso7185prt1901.pas	17	10	109	Type must not be real	136	set element must be ordinal	17	8
+compile	iso7185prt1902.pas	24	23	185	Goto references deeper nested statement	185	goto '1' enters a structured statement	24	18
+compile	iso7185prt1903.pas	23	7	186	Label referenced by goto at lesser statement level or differently nested statement	185	goto '1' enters a structured statement	19	21
+compile	iso7185prt1904.pas	19	12	144	Illegal type of expression	135	condition must be boolean	19	4
+compile	iso7185prt1905.pas	21	11	144	Illegal type of expression	135	condition must be boolean	19	4
+compile	iso7185prt1906.pas	19	13	144	Illegal type of expression	135	condition must be boolean	19	4
+compile	iso7185prt1907a.pas	11	24	109	Type must not be real	107	subrange bounds are not the same ordinal type	11	19
+compile	iso7185prt1907b.pas	11	28	107	Incompatible subrange types	107	subrange bounds are not the same ordinal type	11	19
+compile	iso7185prt1908.pas	18	10	147	Label type incompatible with selecting expression	147	case label type incompatible	16	4
+complete	iso7185prt1909.pas	19	0	0	Value out of range	0	
+compile	iso7185prt1911.pas	12	7	2	Identifier expected	0	
+compile	iso7185prt1912.pas	12	9	6	Illegal symbol	6	expected '.', '..', 'E' or digit
+compile	iso7185prt1913.pas	11	32	241	Invalid tolken separator	466	number and word are not separated	11	33
+compile	iso7185prt1914.pas	13	32	241	Invalid tolken separator	466	number and word are not separated
+compile	iso7185prt1915.pas	16	14	242	Identifier referenced before defining point	460	identifier 'one' is used before its definition	15	13
+compile	iso7185prt1916.pas	16	28	134	Illegal type of operand(s)	441	sign requires an integer or real	16	26
+compile	iso7185prt1917.pas	16	16	242	Identifier referenced before defining point	460	identifier 'one' is used before its definition	16	13
+skip	iso7185prt1918.pas	21	0	0	Undefined location access	0	

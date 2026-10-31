@@ -1,0 +1,876 @@
+{
+package syntax
+
+import (
+	"errors"
+	"strconv"
+	"strings"
+
+	"gopas/internal/ast"
+)
+
+func decodeString(raw []byte) string {
+	s := string(raw[1 : len(raw)-1])
+	return strings.ReplaceAll(s, "''", "'")
+}
+
+func idents(v any) []string {
+	if v == nil {
+		return nil
+	}
+	return v.([]string)
+}
+
+func names(first, rest any) []string {
+	out := []string{first.(string)}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		out = append(out, seq[len(seq)-1].(string))
+	}
+	return out
+}
+
+func decls(v any) []*ast.Decl {
+	items := v.([]any)
+	out := make([]*ast.Decl, len(items))
+	for i, item := range items {
+		out[i] = item.(*ast.Decl)
+	}
+	return out
+}
+
+func exprs(first, rest any) []ast.Expr {
+	out := []ast.Expr{first.(ast.Expr)}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		out = append(out, seq[len(seq)-1].(ast.Expr))
+	}
+	return out
+}
+
+func asStmt(v any) ast.Stmt {
+	if v == nil {
+		return nil
+	}
+	return v.(ast.Stmt)
+}
+
+func elseStmt(v any) ast.Stmt {
+	if v == nil {
+		return nil
+	}
+	seq := v.([]any)
+	return asStmt(seq[len(seq)-1])
+}
+
+func arms(first, rest any) []*ast.Arm {
+	var out []*ast.Arm
+	add := func(v any) {
+		if v != nil {
+			out = append(out, v.(*ast.Arm))
+		}
+	}
+	add(first)
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		add(seq[len(seq)-1])
+	}
+	return out
+}
+
+type block struct {
+	labels   []string
+	labelAt  []*ast.Name
+	consts   []*ast.ConstDef
+	types    []*ast.TypeDef
+	vars     []*ast.Decl
+	routines []ast.Routine
+	body     []ast.Stmt
+	open     ast.Stmt
+}
+
+func asTypes(v any) []*ast.TypeDef {
+	if v == nil {
+		return nil
+	}
+	return v.([]*ast.TypeDef)
+}
+
+func typeDefs(v any) []*ast.TypeDef {
+	items := v.([]any)
+	out := make([]*ast.TypeDef, len(items))
+	for i, item := range items {
+		out[i] = item.(*ast.TypeDef)
+	}
+	return out
+}
+
+func typeList(first, rest any) []ast.Type {
+	out := []ast.Type{first.(ast.Type)}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		out = append(out, seq[len(seq)-1].(ast.Type))
+	}
+	return out
+}
+
+func pin(line, col int, n any) any {
+	ast.SetPos(n, line, col)
+	return n
+}
+
+func place(n, src any) any {
+	p := ast.At(src)
+	ast.SetPos(n, p.Line, p.Col)
+	return n
+}
+
+func selected(base ast.Expr, groups any) ast.Expr {
+	items, _ := groups.([]any)
+	for _, item := range items {
+		switch s := item.(type) {
+		case []ast.Expr:
+			base = place(&ast.Indexed{Base: base, Indexes: s}, base).(ast.Expr)
+		case string:
+			base = place(&ast.Select{Base: base, Field: s}, base).(ast.Expr)
+		case derefMark:
+			base = place(&ast.Deref{Base: base}, base).(ast.Expr)
+		}
+	}
+	return base
+}
+
+func foldBinary(first ast.Expr, rest any, unary string) ast.Expr {
+	expr := first
+	if unary != "" {
+		expr = place(&ast.Unary{Op: unary, X: expr}, expr).(ast.Expr)
+	}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		right := seq[3].(ast.Expr)
+		expr = place(&ast.Binary{Op: seq[1].(string), Left: expr, Right: right}, right).(ast.Expr)
+	}
+	return expr
+}
+
+func setElems(first, rest any) []*ast.SetElem {
+	out := []*ast.SetElem{first.(*ast.SetElem)}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		out = append(out, seq[len(seq)-1].(*ast.SetElem))
+	}
+	return out
+}
+
+func fieldSecs(first, rest any) []*ast.Field {
+	out := []*ast.Field{first.(*ast.Field)}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		out = append(out, seq[len(seq)-1].(*ast.Field))
+	}
+	return out
+}
+
+func variantArms(first, rest any) []*ast.VariantArm {
+	out := []*ast.VariantArm{first.(*ast.VariantArm)}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		out = append(out, seq[len(seq)-1].(*ast.VariantArm))
+	}
+	return out
+}
+
+func signed(sign, value any) ast.Expr {
+	expr := value.(ast.Expr)
+	if sign == nil {
+		return expr
+	}
+	return place(&ast.Unary{Op: sign.(string), X: expr}, expr).(ast.Expr)
+}
+
+func asDecls(v any) []*ast.Decl {
+	if v == nil {
+		return nil
+	}
+	return v.([]*ast.Decl)
+}
+
+func paramSections(first, rest any) []ast.Formal {
+	out := []ast.Formal{first.(ast.Formal)}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		out = append(out, seq[len(seq)-1].(ast.Formal))
+	}
+	return out
+}
+
+func paramsOf(v any) []ast.Formal {
+	if v == nil {
+		return nil
+	}
+	return v.([]ast.Formal)
+}
+
+func confIndexes(first, rest any) []ast.ConfIndex {
+	out := []ast.ConfIndex{first.(ast.ConfIndex)}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		out = append(out, seq[len(seq)-1].(ast.ConfIndex))
+	}
+	return out
+}
+
+func canonLabel(raw string) (string, error) {
+	n, err := strconv.Atoi(raw)
+	if err != nil || n > 9999 {
+		return "", errors.New("label out of range")
+	}
+	return strconv.Itoa(n), nil
+}
+
+func asLabelNodes(v any) []*ast.Name {
+	if v == nil {
+		return nil
+	}
+	return v.([]*ast.Name)
+}
+
+func labelTexts(ns []*ast.Name) []string {
+	if len(ns) == 0 {
+		return nil
+	}
+	out := make([]string, len(ns))
+	for i, n := range ns {
+		out[i] = n.Ident
+	}
+	return out
+}
+
+func nodeNames(first, rest any) []*ast.Name {
+	out := []*ast.Name{first.(*ast.Name)}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		out = append(out, seq[len(seq)-1].(*ast.Name))
+	}
+	return out
+}
+
+func asConsts(v any) []*ast.ConstDef {
+	if v == nil {
+		return nil
+	}
+	return v.([]*ast.ConstDef)
+}
+
+func constDefs(v any) []*ast.ConstDef {
+	items := v.([]any)
+	out := make([]*ast.ConstDef, len(items))
+	for i, item := range items {
+		out[i] = item.(*ast.ConstDef)
+	}
+	return out
+}
+
+type derefMark struct{}
+
+func writeSpec(spec any) (width, frac ast.Expr) {
+	var found []ast.Expr
+	var walk func(any)
+	walk = func(v any) {
+		switch s := v.(type) {
+		case ast.Expr:
+			found = append(found, s)
+		case []any:
+			for _, item := range s {
+				walk(item)
+			}
+		}
+	}
+	walk(spec)
+	if len(found) > 0 {
+		width = found[0]
+	}
+	if len(found) > 1 {
+		frac = found[1]
+	}
+	return width, frac
+}
+
+func writeArgs(first, rest any) []ast.WriteArg {
+	out := []ast.WriteArg{first.(ast.WriteArg)}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		out = append(out, seq[len(seq)-1].(ast.WriteArg))
+	}
+	return out
+}
+
+func routinesOf(v any) []ast.Routine {
+	items, _ := v.([]any)
+	if len(items) == 0 {
+		return nil
+	}
+	out := make([]ast.Routine, len(items))
+	for i, item := range items {
+		seq := item.([]any)
+		out[i] = seq[0].(ast.Routine)
+	}
+	return out
+}
+
+func argsOf(v any) []ast.Expr {
+	if v == nil {
+		return nil
+	}
+	return v.([]ast.Expr)
+}
+
+func commands(first, rest any) []ast.Stmt {
+	var out []ast.Stmt
+	if first != nil {
+		out = append(out, first.(ast.Stmt))
+	}
+	items, _ := rest.([]any)
+	for _, item := range items {
+		seq := item.([]any)
+		if last := seq[len(seq)-1]; last != nil {
+			out = append(out, last.(ast.Stmt))
+		}
+	}
+	return out
+}
+}
+
+// Subset of the Jensen/Wirth program rule, plus conditional and repetitive
+// statements. A comparison is a simple value, or two simple values joined by
+// =, <>, <, <=, >=, or >. Else binds to the nearest if.
+//
+//	if n < 10 then n := 1 else writeln('Hello')
+Program <- _ "program"i ![A-Za-z0-9] _ name:Ident params:ProgramParams? _ ";" _
+	b:Block _ "." _ !. {
+	blk := b.(*block)
+	files := asLabelNodes(params)
+	return pin(c.pos.line, c.pos.col, &ast.Program{
+		Name:       name.(string),
+		Files:      labelTexts(files),
+		FileAt:     files,
+		Labels:     blk.labels,
+		LabelAt:    blk.labelAt,
+		Consts:     blk.consts,
+		Types:      blk.types,
+		Vars:       blk.vars,
+		Routines:   blk.routines,
+		Body:       blk.body,
+		MissingEnd: blk.open,
+	}), nil
+}
+
+ProgramParams <- _ "(" _ first:PosIdent rest:(_ "," _ PosIdent)* _ ")" {
+	return nodeNames(first, rest), nil
+}
+
+PosIdent <- id:Ident {
+	return pin(c.pos.line, c.pos.col, &ast.Name{Ident: id.(string)}), nil
+}
+
+Block <- labels:LabelPart? _ consts:ConstPart? _ types:TypePart? _ vars:VarPart? _ routines:RoutinePart comp:Compound {
+	at := asLabelNodes(labels)
+	node := comp.(*ast.Compound)
+	var open ast.Stmt
+	if node.Open {
+		open = node
+	}
+	return &block{
+		labels:   labelTexts(at),
+		labelAt:  at,
+		consts:   asConsts(consts),
+		types:    asTypes(types),
+		vars:     asDecls(vars),
+		routines: routines.([]ast.Routine),
+		body:     node.Body,
+		open:     open,
+	}, nil
+}
+
+LabelPart <- "label"i ![A-Za-z0-9] _ first:Label rest:(_ "," _ Label)* _ ";" {
+	return nodeNames(first, rest), nil
+}
+
+Label <- [0-9]+ {
+	text, err := canonLabel(string(c.text))
+	if err != nil {
+		return nil, err
+	}
+	return pin(c.pos.line, c.pos.col, &ast.Name{Ident: text}), nil
+}
+
+ConstPart <- "const"i ![A-Za-z0-9] _ list:ConstDef+ {
+	return constDefs(list), nil
+}
+
+ConstDef <- name:Ident _ "=" _ value:Const _ ";" _ {
+	return pin(c.pos.line, c.pos.col, &ast.ConstDef{Name: name.(string), Value: value.(ast.Expr)}), nil
+}
+
+TypePart <- "type"i ![A-Za-z0-9] _ list:TypeDef+ {
+	return typeDefs(list), nil
+}
+
+TypeDef <- name:Ident _ "=" _ typ:Type _ ";" _ {
+	return pin(c.pos.line, c.pos.col, &ast.TypeDef{Name: name.(string), Type: typ.(ast.Type)}), nil
+}
+
+Type <- Array / RecordType / FileType / SetType / PointerType / SimpleType
+
+SimpleType <- Enum / Subrange / TypeName
+
+SetType <- packed:("packed"i ![A-Za-z0-9] _)? "set"i ![A-Za-z0-9] _ "of"i ![A-Za-z0-9] _ base:SimpleType {
+	return pin(c.pos.line, c.pos.col, &ast.Set{Packed: packed != nil, Base: base.(ast.Type)}), nil
+}
+
+FileType <- packed:("packed"i ![A-Za-z0-9] _)? "file"i ![A-Za-z0-9] _ "of"i ![A-Za-z0-9] _ elem:Type {
+	return pin(c.pos.line, c.pos.col, &ast.File{Packed: packed != nil, Elem: elem.(ast.Type)}), nil
+}
+
+PointerType <- Ptr _ id:Ident {
+	return pin(c.pos.line, c.pos.col, &ast.Pointer{To: id.(string)}), nil
+}
+
+Ptr <- "^" / "↑" / "@"
+
+Array <- packed:("packed"i ![A-Za-z0-9] _)? "array"i ![A-Za-z0-9] _ LBrack _ first:SimpleType rest:(_ "," _ SimpleType)* _ RBrack _ "of"i ![A-Za-z0-9] _ elem:Type {
+	return pin(c.pos.line, c.pos.col, &ast.Array{Packed: packed != nil, Index: typeList(first, rest), Elem: elem.(ast.Type)}), nil
+}
+
+RecordType <- packed:("packed"i ![A-Za-z0-9] _)? "record"i ![A-Za-z0-9] _ fields:FieldList _ "end"i ![A-Za-z0-9] {
+	var fl *ast.FieldList
+	if fields != nil {
+		fl = fields.(*ast.FieldList)
+	}
+	return pin(c.pos.line, c.pos.col, &ast.Record{Packed: packed != nil, Fields: fl}), nil
+}
+
+FieldList <- vari:VariantPart _ ";"? {
+	return pin(c.pos.line, c.pos.col, &ast.FieldList{Variant: vari.(*ast.Variant)}), nil
+} / secs:FieldSecs vari:(_ ";" _ VariantPart)? _ ";"? {
+	fl := &ast.FieldList{Fixed: secs.([]*ast.Field)}
+	if vari != nil {
+		seq := vari.([]any)
+		fl.Variant = seq[len(seq)-1].(*ast.Variant)
+	}
+	return fl, nil
+} / "" {
+	return nil, nil
+}
+
+FieldSecs <- first:FieldSection rest:(_ ";" _ FieldSection)* {
+	return fieldSecs(first, rest), nil
+}
+
+FieldSection <- first:Ident rest:(_ "," _ Ident)* _ ":" _ typ:Type {
+	return pin(c.pos.line, c.pos.col, &ast.Field{Names: names(first, rest), Type: typ.(ast.Type)}), nil
+}
+
+VariantPart <- "case"i ![A-Za-z0-9] _ tag:(Ident _ ":" _)? typ:Ident _ "of"i ![A-Za-z0-9] _ first:VariantArm rest:(_ ";" _ &{ return variantLabel(), nil } VariantArm)* {
+	name := ""
+	if tag != nil {
+		seq := tag.([]any)
+		name = seq[0].(string)
+	}
+	return pin(c.pos.line, c.pos.col, &ast.Variant{Tag: name, Type: typ.(string), Arms: variantArms(first, rest)}), nil
+}
+
+VariantArm <- first:Const rest:(_ "," _ Const)* _ ":" !"=" _ "(" _ fields:FieldList _ ")" {
+	var fl *ast.FieldList
+	if fields != nil {
+		fl = fields.(*ast.FieldList)
+	}
+	return pin(c.pos.line, c.pos.col, &ast.VariantArm{Labels: exprs(first, rest), Fields: fl}), nil
+}
+
+Enum <- "(" _ first:Ident rest:(_ "," _ Ident)* _ ")" {
+	return pin(c.pos.line, c.pos.col, &ast.Enum{Names: names(first, rest)}), nil
+}
+
+Subrange <- low:Const _ ".." _ high:Const {
+	return pin(c.pos.line, c.pos.col, &ast.Subrange{Low: low.(ast.Expr), High: high.(ast.Expr)}), nil
+}
+
+TypeName <- id:Ident {
+	return pin(c.pos.line, c.pos.col, &ast.TypeName{Name: id.(string)}), nil
+}
+
+Const <- sign:Sign? _ num:Number {
+	return pin(c.pos.line, c.pos.col, signed(sign, num)), nil
+} / sign:Sign? _ id:Ident {
+	return pin(c.pos.line, c.pos.col, signed(sign, &ast.Name{Ident: id.(string)})), nil
+} / str:String {
+	return pin(c.pos.line, c.pos.col, &ast.Str{Value: str.(string)}), nil
+}
+
+Sign <- "+" { return "+", nil } / "-" { return "-", nil }
+
+Number <- Real / Int
+
+RoutinePart <- list:(Routine _ ";" _)* {
+	return routinesOf(list), nil
+}
+
+Routine <- Func / Proc
+
+Func <- "function"i ![A-Za-z0-9] _ name:PosIdent formals:Formal? _ ":" _ result:Ident _ ";" _ ForwardDir {
+	nm := name.(*ast.Name)
+	fn := &ast.Func{Name: nm.Ident, Params: paramsOf(formals), Result: result.(string), Forward: true}
+	ast.SetPos(fn, c.pos.line, c.pos.col)
+	ast.SetNamePos(fn, ast.At(nm).Line, ast.At(nm).Col)
+	return fn, nil
+} / "function"i ![A-Za-z0-9] _ name:Ident formals:Formal? _ ":" _ result:Ident _ ";" _ b:Block {
+	blk := b.(*block)
+	return pin(c.pos.line, c.pos.col, &ast.Func{
+		Name:     name.(string),
+		Params:   paramsOf(formals),
+		Result:   result.(string),
+		Labels:   blk.labels,
+		LabelAt:  blk.labelAt,
+		Consts:   blk.consts,
+		Types:    blk.types,
+		Vars:     blk.vars,
+		Routines: blk.routines,
+		Body:     blk.body,
+	}), nil
+} / "function"i ![A-Za-z0-9] _ name:Ident _ ";" _ b:Block {
+	blk := b.(*block)
+	return pin(c.pos.line, c.pos.col, &ast.Func{
+		Name:     name.(string),
+		Labels:   blk.labels,
+		LabelAt:  blk.labelAt,
+		Consts:   blk.consts,
+		Types:    blk.types,
+		Vars:     blk.vars,
+		Routines: blk.routines,
+		Body:     blk.body,
+	}), nil
+}
+
+Proc <- "procedure"i ![A-Za-z0-9] _ name:PosIdent formals:Formal? _ ";" _ ForwardDir {
+	nm := name.(*ast.Name)
+	proc := &ast.Proc{Name: nm.Ident, Params: paramsOf(formals), Forward: true}
+	ast.SetPos(proc, c.pos.line, c.pos.col)
+	ast.SetNamePos(proc, ast.At(nm).Line, ast.At(nm).Col)
+	return proc, nil
+} / "procedure"i ![A-Za-z0-9] _ name:Ident formals:Formal? _ ";" _ b:Block {
+	blk := b.(*block)
+	return pin(c.pos.line, c.pos.col, &ast.Proc{
+		Name:     name.(string),
+		Params:   paramsOf(formals),
+		Labels:   blk.labels,
+		LabelAt:  blk.labelAt,
+		Consts:   blk.consts,
+		Types:    blk.types,
+		Vars:     blk.vars,
+		Routines: blk.routines,
+		Body:     blk.body,
+	}), nil
+}
+
+ForwardDir <- "forward"i ![A-Za-z0-9] {
+	return true, nil
+}
+
+Formal <- _ "(" _ first:Section rest:(_ ";" _ Section)* _ ")" {
+	return paramSections(first, rest), nil
+}
+
+Section <- ProcParam / FuncParam / ConfParam / Param
+
+ProcParam <- "procedure"i ![A-Za-z0-9] _ name:Ident formals:Formal? {
+	return pin(c.pos.line, c.pos.col, &ast.ProcParam{Name: name.(string), Params: paramsOf(formals)}), nil
+}
+
+FuncParam <- "function"i ![A-Za-z0-9] _ name:Ident formals:Formal? _ ":" _ result:Ident {
+	return pin(c.pos.line, c.pos.col, &ast.FuncParam{Name: name.(string), Params: paramsOf(formals), Result: result.(string)}), nil
+}
+
+Param <- byRef:("var"i ![A-Za-z0-9] _)? first:Ident rest:(_ "," _ Ident)* _ ":" _ typ:Ident {
+	return pin(c.pos.line, c.pos.col, &ast.Param{Names: names(first, rest), ByRef: byRef != nil, Type: typ.(string)}), nil
+}
+
+ConfParam <- byRef:("var"i ![A-Za-z0-9] _)? first:Ident rest:(_ "," _ Ident)* _ ":" _ schema:ConfSchema {
+	return pin(c.pos.line, c.pos.col, &ast.ConfParam{Names: names(first, rest), ByRef: byRef != nil, Schema: schema.(*ast.ConfSchema)}), nil
+}
+
+ConfSchema <- PackedSchema / OpenSchema
+
+PackedSchema <- "packed"i ![A-Za-z0-9] _ "array"i ![A-Za-z0-9] _ "[" _ idx:ConfIndex _ "]" _ "of"i ![A-Za-z0-9] _ elem:Ident {
+	return pin(c.pos.line, c.pos.col, &ast.ConfSchema{Packed: true, Indexes: []ast.ConfIndex{idx.(ast.ConfIndex)}, Elem: elem.(string)}), nil
+}
+
+OpenSchema <- "array"i ![A-Za-z0-9] _ "[" _ first:ConfIndex rest:(_ ";" _ ConfIndex)* _ "]" _ "of"i ![A-Za-z0-9] _ comp:ConfComponent {
+	s := &ast.ConfSchema{Indexes: confIndexes(first, rest)}
+	switch comp := comp.(type) {
+	case *ast.ConfSchema:
+		s.Nested = comp
+	case string:
+		s.Elem = comp
+	}
+	return s, nil
+}
+
+ConfComponent <- ConfSchema / Ident
+
+ConfIndex <- low:Ident _ ".." _ high:Ident _ ":" _ typ:Ident {
+	return pin(c.pos.line, c.pos.col, ast.ConfIndex{Low: low.(string), High: high.(string), Type: typ.(string)}), nil
+}
+
+With <- "with"i ![A-Za-z0-9] _ first:Variable rest:(_ "," _ Variable)* _ "do"i ![A-Za-z0-9] _ body:Stmt {
+	return pin(c.pos.line, c.pos.col, &ast.With{Recs: exprs(first, rest), Body: asStmt(body)}), nil
+}
+
+Compound <- "begin"i ![A-Za-z0-9] _ body:Body _ "end"i ![A-Za-z0-9] {
+	return pin(c.pos.line, c.pos.col, &ast.Compound{Body: body.([]ast.Stmt)}), nil
+} / &{ return recovering(c), nil } "begin"i ![A-Za-z0-9] _ body:Body &{ return nextIsDot(), nil } {
+	return pin(c.pos.line, c.pos.col, &ast.Compound{Body: body.([]ast.Stmt), Open: true}), nil
+}
+
+Body <- first:Stmt rest:(_ ";" _ Stmt)* {
+	return commands(first, rest), nil
+}
+
+Stmt <- label:Label _ ":" _ stmt:Plain {
+	var inner ast.Stmt
+	if stmt != nil {
+		inner = stmt.(ast.Stmt)
+	}
+	return pin(c.pos.line, c.pos.col, &ast.Labeled{Label: label.(*ast.Name).Ident, Stmt: inner}), nil
+} / Plain
+
+Plain <- If / While / RepeatStmt / ForStmt / CaseStmt / With / Compound / Goto / ReadStmt / WriteStmt / Assign / BadStmt / Call / Empty
+
+// A word that is not a call or an assignment. The following text is kept only
+// so the name can be reported; the intended keyword is not guessed.
+BadStmt <- &{ return recovering(c) && badStmtStart(), nil } id:Ident (&{ return !atFinalEnd(), nil } .)* {
+	return pin(c.pos.line, c.pos.col, &ast.Loose{Name: id.(string)}), nil
+}
+
+Goto <- "goto"i ![A-Za-z0-9] _ label:Label {
+	return pin(c.pos.line, c.pos.col, &ast.Goto{Label: label.(*ast.Name).Ident}), nil
+}
+
+ReadName <- "readln"i ![A-Za-z0-9] { return "readln", nil } / "read"i ![A-Za-z0-9] { return "read", nil }
+
+WriteName <- "writeln"i ![A-Za-z0-9] { return "writeln", nil } / "write"i ![A-Za-z0-9] { return "write", nil }
+
+ReadStmt <- name:ReadName _ "(" _ first:Variable rest:(_ "," _ Variable)* _ ")" {
+	return pin(c.pos.line, c.pos.col, &ast.Read{Ln: name.(string) == "readln", Vars: exprs(first, rest)}), nil
+}
+
+WriteStmt <- name:WriteName _ "(" _ first:WriteArg rest:(_ "," _ WriteArg)* _ ")" {
+	return pin(c.pos.line, c.pos.col, &ast.Write{Ln: name.(string) == "writeln", Args: writeArgs(first, rest)}), nil
+}
+
+WriteArg <- value:Expr spec:(_ ":" !"=" _ Expr (_ ":" !"=" _ Expr)?)? {
+	width, frac := writeSpec(spec)
+	return pin(c.pos.line, c.pos.col, ast.WriteArg{Value: value.(ast.Expr), Width: width, Frac: frac}), nil
+}
+
+Empty <- &(Semi / "else"i ![A-Za-z0-9] / "until"i ![A-Za-z0-9] / "end"i ![A-Za-z0-9]) {
+	return nil, nil
+}
+
+Semi <- ";"
+
+If <- "if"i ![A-Za-z0-9] _ cond:Expr _ "then"i ![A-Za-z0-9] _ yes:Stmt no:(_ "else"i ![A-Za-z0-9] _ Stmt)? {
+	return pin(c.pos.line, c.pos.col, &ast.If{Cond: cond.(ast.Expr), Then: asStmt(yes), Else: elseStmt(no)}), nil
+}
+
+While <- "while"i ![A-Za-z0-9] _ cond:Expr _ "do"i ![A-Za-z0-9] _ body:Stmt {
+	return pin(c.pos.line, c.pos.col, &ast.While{Cond: cond.(ast.Expr), Body: asStmt(body)}), nil
+}
+
+RepeatStmt <- "repeat"i ![A-Za-z0-9] _ body:Body _ "until"i ![A-Za-z0-9] _ cond:Expr {
+	return pin(c.pos.line, c.pos.col, &ast.Repeat{Body: body.([]ast.Stmt), Cond: cond.(ast.Expr)}), nil
+}
+
+ForStmt <- "for"i ![A-Za-z0-9] _ name:Ident _ ":=" _ from:Expr _ down:Direction _ to:Expr _ "do"i ![A-Za-z0-9] _ body:Stmt {
+	return pin(c.pos.line, c.pos.col, &ast.For{
+		Name: name.(string),
+		From: from.(ast.Expr),
+		Down: down.(bool),
+		To:   to.(ast.Expr),
+		Body: asStmt(body),
+	}), nil
+}
+
+Direction <- "downto"i ![A-Za-z0-9] { return true, nil } / "to"i ![A-Za-z0-9] { return false, nil }
+
+CaseStmt <- "case"i ![A-Za-z0-9] _ expr:Expr _ "of"i ![A-Za-z0-9] _ first:Arm rest:(_ ";" _ Arm)* _ ";"? _ "end"i ![A-Za-z0-9] {
+	return pin(c.pos.line, c.pos.col, &ast.Case{Expr: expr.(ast.Expr), Arms: arms(first, rest)}), nil
+}
+
+Arm <- first:Const rest:(_ "," _ Const)* _ ":" !"=" _ stmt:Stmt {
+	var branch ast.Stmt
+	if stmt != nil {
+		branch = stmt.(ast.Stmt)
+	}
+	return pin(c.pos.line, c.pos.col, &ast.Arm{Labels: exprs(first, rest), Stmt: branch}), nil
+}
+
+VarPart <- "var"i ![A-Za-z0-9] _ list:Decl+ {
+	return decls(list), nil
+}
+
+Decl <- first:Ident rest:(_ "," _ Ident)* _ ":" _ typ:Type _ ";" _ {
+	return pin(c.pos.line, c.pos.col, &ast.Decl{Names: names(first, rest), Type: typ.(ast.Type)}), nil
+} / &{ return recovering(c), nil } first:Ident rest:(_ "," _ Ident)* _ ":" _ id:PosIdent &{ return badTypeTail(), nil } (Comment / !(_ ";") .)+ _ ";" _ {
+	nm := id.(*ast.Name)
+	tn := place(&ast.TypeName{Name: nm.Ident, Skip: true}, nm).(*ast.TypeName)
+	return pin(c.pos.line, c.pos.col, &ast.Decl{Names: names(first, rest), Type: tn}), nil
+}
+
+Assign <- &{ return recovering(c), nil } left:Variable _ ":=" _ &{ return twoPlainIdents(), nil } id:PosIdent _ Ident {
+	nm := id.(*ast.Name)
+	loose := place(&ast.Loose{Name: nm.Ident}, nm).(ast.Expr)
+	return pin(c.pos.line, c.pos.col, &ast.Assign{Left: left.(ast.Expr), Value: loose}), nil
+} / left:Variable _ ":=" _ value:Expr {
+	return pin(c.pos.line, c.pos.col, &ast.Assign{Left: left.(ast.Expr), Value: value.(ast.Expr)}), nil
+}
+
+Call <- name:Ident args:Actual? {
+	n := name.(string)
+	if args != nil && (n == "read" || n == "readln" || n == "write" || n == "writeln") {
+		return nil, errors.New("invalid parameter list")
+	}
+	return pin(c.pos.line, c.pos.col, &ast.Call{Name: n, Args: argsOf(args)}), nil
+}
+
+Actual <- _ "(" _ first:Expr rest:(_ "," _ Expr)* _ ")" {
+	return exprs(first, rest), nil
+}
+
+Expr <- left:SimpleExpr rel:(_ RelOp _ SimpleExpr)? {
+	if rel == nil {
+		return left, nil
+	}
+	seq := rel.([]any)
+	return pin(c.pos.line, c.pos.col, &ast.Binary{Op: seq[1].(string), Left: left.(ast.Expr), Right: seq[3].(ast.Expr)}), nil
+}
+
+SimpleExpr <- sign:Sign? _ first:Term rest:(_ AddOp _ Term)* {
+	unary := ""
+	if sign != nil {
+		unary = sign.(string)
+	}
+	return pin(c.pos.line, c.pos.col, foldBinary(first.(ast.Expr), rest, unary)), nil
+}
+
+Term <- first:Factor rest:(_ MulOp _ Factor)* {
+	return pin(c.pos.line, c.pos.col, foldBinary(first.(ast.Expr), rest, "")), nil
+}
+
+Factor <- "not"i ![A-Za-z0-9] _ x:Factor {
+	return pin(c.pos.line, c.pos.col, &ast.Unary{Op: "not", X: x.(ast.Expr)}), nil
+} / "(" _ expr:Expr _ ")" {
+	return place(&ast.Paren{X: expr.(ast.Expr)}, expr), nil
+} / set:SetLit / Real / Int / str:String {
+	return pin(c.pos.line, c.pos.col, &ast.Str{Value: str.(string)}), nil
+} / "nil"i ![A-Za-z0-9] {
+	return pin(c.pos.line, c.pos.col, &ast.Nil{}), nil
+} / call:FuncCall / v:Variable {
+	return v, nil
+}
+
+SetLit <- LBrack _ elems:SetElems? _ RBrack {
+	var members []*ast.SetElem
+	if elems != nil {
+		members = elems.([]*ast.SetElem)
+	}
+	return pin(c.pos.line, c.pos.col, &ast.SetLit{Elems: members}), nil
+}
+
+SetElems <- first:SetElem rest:(_ "," _ SetElem)* {
+	return setElems(first, rest), nil
+}
+
+SetElem <- low:Expr high:(_ ".." _ Expr)? {
+	el := &ast.SetElem{Low: low.(ast.Expr)}
+	if high != nil {
+		seq := high.([]any)
+		el.High = seq[len(seq)-1].(ast.Expr)
+	}
+	return el, nil
+}
+
+AddOp <- ("+" / "-") { return string(c.text), nil } / "or"i ![A-Za-z0-9] { return "or", nil }
+
+MulOp <- "*" { return "*", nil } / "/" { return "/", nil } / "div"i ![A-Za-z0-9] { return "div", nil } / "mod"i ![A-Za-z0-9] { return "mod", nil } / "and"i ![A-Za-z0-9] { return "and", nil }
+
+Variable <- id:Ident groups:(IndexOp / FieldOp / DerefOp)* {
+	name := pin(c.pos.line, c.pos.col, &ast.Name{Ident: id.(string)})
+	return pin(c.pos.line, c.pos.col, selected(name.(ast.Expr), groups)), nil
+}
+
+DerefOp <- _ Ptr {
+	return derefMark{}, nil
+}
+
+FieldOp <- _ "." !"." _ id:Ident {
+	return id, nil
+}
+
+IndexOp <- _ LBrack _ list:ExprList _ RBrack {
+	return list, nil
+}
+
+ExprList <- first:Expr rest:(_ "," _ Expr)* {
+	return exprs(first, rest), nil
+}
+
+FuncCall <- name:Ident args:Actual {
+	return pin(c.pos.line, c.pos.col, &ast.CallExpr{Name: name.(string), Args: args.([]ast.Expr)}), nil
+}
+
+RelOp <- ("<>" / "<=" / ">=" / "<" / ">" / "=") {
+	return string(c.text), nil
+} / "in"i ![A-Za-z0-9] { return "in", nil }
+
+Real <- ([0-9]+ "." [0-9]+ ("E"i [-+]? [0-9]+)? / [0-9]+ "E"i [-+]? [0-9]+) {
+	joinedWord()
+	return pin(c.pos.line, c.pos.col, &ast.Real{Text: string(c.text)}), nil
+}
+
+Int <- [0-9]+ {
+	joinedWord()
+	return pin(c.pos.line, c.pos.col, &ast.Int{Text: string(c.text)}), nil
+}
+
+String <- &{ return emptyQuotes(), nil } "''" {
+	return "", nil
+} / "'" ("''" / !"'" !"\n" .)+ "'" {
+	return decodeString(c.text), nil
+}
+
+Ident <- &{ return notKeyword(), nil } [A-Za-z] [A-Za-z0-9]* {
+	return strings.ToLower(string(c.text)), nil
+}
+
+LBrack <- "[" / "(."
+
+RBrack <- "]" / ".)"
+
+_ <- (Space / Comment)*
+
+Space <- [ \t\r\n]
+
+Comment <- ("{" / "(*") (!"*)" !"}" ("\n" / .))* ("*)" / "}")
