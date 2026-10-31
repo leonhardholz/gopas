@@ -2140,6 +2140,7 @@ func (g *gen) predefStmt(name string, args []ast.Expr) {
 		g.line("%s.%s()", g.lvalue(args[0]), meth)
 	case "readln":
 		g.use(runtime.PartText)
+		g.flushOutput()
 		g.line("rtProgramInput.ReadLn()")
 	case "writeln":
 		g.use(runtime.PartText)
@@ -2245,6 +2246,14 @@ func (g *gen) indexOff(index Type, e ast.Expr) string {
 	return fmt.Sprintf("int((%s)-(%s))", g.asIntExpr(e), g.intLit(lo))
 }
 
+// flushOutput makes a prompt written without a line marker visible
+// before the program waits to read.
+func (g *gen) flushOutput() {
+	if g.c.usedOutput {
+		g.line("rtProgramOutput.Flush()")
+	}
+}
+
 func (g *gen) read(s *ast.Read) {
 	vars := s.Vars
 	file := "rtProgramInput"
@@ -2261,6 +2270,7 @@ func (g *gen) read(s *ast.Read) {
 	}
 	if text {
 		g.use(runtime.PartText)
+		g.flushOutput()
 	} else {
 		g.use(runtime.PartFile)
 	}

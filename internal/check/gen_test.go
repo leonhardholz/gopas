@@ -3,6 +3,7 @@ package check
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -222,6 +223,68 @@ end.
 	if got := runGenerated(t, src); got != " TRUEFALSE TRUEFALSEFALSE\nFALSE TRUE TRUE\n" {
 		t.Fatalf("got %q", got)
 	}
+}
+
+func TestPromptVisibleBeforeRead(t *testing.T) {
+	src := `program p(input, output);
+begin
+  write('go');
+  readln
+end.
+`
+	prog := parseSource(t, src)
+	out, errs := Generate(prog, nil)
+	if len(errs) > 0 {
+		t.Fatal(errs)
+	}
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module example\n\ngo 1.18\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte(out), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	bin := filepath.Join(dir, "p")
+	build := exec.Command("go", "build", "-o", bin, ".")
+	build.Dir = dir
+	if bout, err := build.CombinedOutput(); err != nil {
+		t.Fatalf("build: %v\n%s", err, bout)
+	}
+	cmd := exec.Command(bin)
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.Start(); err != nil {
+		t.Fatal(err)
+	}
+	defer cmd.Process.Kill()
+	got := make([]byte, 2)
+	done := make(chan error, 1)
+	go func() {
+		_, err := io.ReadFull(stdout, got)
+		done <- err
+	}()
+	select {
+	case err := <-done:
+		if err != nil {
+			t.Fatal(err)
+		}
+	case <-time.After(3 * time.Second):
+		t.Fatal("prompt was not written before readln")
+	}
+	if string(got) != "go" {
+		t.Fatalf("got %q", got)
+	}
+	if _, err := io.WriteString(stdin, "\n"); err != nil {
+		t.Fatal(err)
+	}
+	stdin.Close()
+	cmd.Wait()
 }
 
 func TestFlushPartialLine(t *testing.T) {
